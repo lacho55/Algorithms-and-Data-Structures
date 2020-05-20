@@ -14,8 +14,8 @@ private:
 	size_t _capacity = 0;
 
 
-	/* ------ Help Functions -------*/
-	void assign(size_t n , T = T());
+	/* ------ Help Functions ------- */
+	void assign(size_t n, T = T());
 	void assign(T* data, size_t n);
 	void move(Vector& other) const;
 
@@ -33,7 +33,7 @@ public:
 
 	/* ------- Accessors ---------*/
 	T* data() const;
-	const T& operator[](size_t index) const;
+	T& operator[](size_t index) const;
 	const char& front() const;
 	const char& back() const;
 
@@ -41,14 +41,18 @@ public:
 	/* ------ Capacity --------*/
 	bool empty() const;
 	void clear();
+	void erase();
 	size_t capacity() const;
 	size_t size() const;
 	void reserve(size_t n);
 	void resize(size_t new_size, T = T());
+	void print() const;
 
 	/* ----- Modifiers ------ */
 	void push_back(const T& val);
+	void removeAtIndex(int index);
+	void removeElement(const T& element);
 	T pop_back();
-	void swap(Vector & other);
-};
+	void swap(Vector& other);
 
+};

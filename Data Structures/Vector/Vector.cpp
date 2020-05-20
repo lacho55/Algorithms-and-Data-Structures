@@ -1,4 +1,6 @@
+#pragma once
 #include "Vector.h"
+
 
 /* ------ Constructors --------*/
 template<typename T>
@@ -20,7 +22,7 @@ Vector<T>::Vector(const Vector& other) {
 
 
 template<typename T>
-Vector<T>::Vector(const Vector&& other) noexcept{
+Vector<T>::Vector(const Vector&& other) noexcept {
 	move(other);
 }
 
@@ -41,7 +43,7 @@ Vector<T>& Vector<T>::operator=(const Vector& other) {
 
 
 template<typename T>
-Vector<T>& Vector<T>::operator=(const Vector&& other) noexcept{
+Vector<T>& Vector<T>::operator=(const Vector&& other) noexcept {
 	if (this != &other) {
 		delete[] _data;
 		move(other);
@@ -91,8 +93,8 @@ T* Vector<T>::data() const {
 
 
 template<typename T>
-const T& Vector<T>::operator[](size_t index) const {
-	if(index < 0 || index >= _size) throw std::out_of_range("Out of range exception");
+T& Vector<T>::operator[](size_t index) const {
+	if (index < 0 || index >= _size) throw std::out_of_range("Out of range exception");
 	return *(_data + index);
 }
 
@@ -122,6 +124,14 @@ void Vector<T>::clear() {
 	_data = nullptr;
 	_size = 0;
 	_capacity = 0;
+}
+
+
+template<typename T>
+void Vector<T>::erase() {
+	delete[] _data;
+	reserve(INITIAL_CAPACITY);
+	_size = 0;
 }
 
 
@@ -166,6 +176,15 @@ void Vector<T>::resize(size_t new_size, T val) {
 }
 
 
+template<typename T>
+void Vector<T>::print() const {
+	for (size_t i = 0; i < this->_size; i++)
+	{
+		cout << this->_data[i];
+	}
+}
+
+
 
 /* ----- Modifiers ------ */
 template<typename T>
@@ -187,6 +206,29 @@ void Vector<T>::push_back(const T& val) {
 	}
 
 	_data[_size++] = val;
+}
+
+template <class T>
+void Vector<T>::removeAtIndex(int index)
+{
+
+	for (int i = index; i < this->_size - 1; i++)
+	{
+		this->_data[i] = this->_data[i + 1];
+	}
+	this->_size--;
+}
+
+
+template <class T>
+void Vector<T>::removeElement(const T& element)
+{
+	int index;
+	for (int i = 0; i < this->_size; i++)
+	{
+		if (this->_data[i] == element) index = i;
+	}
+	removeAtIndex(index);
 }
 
 
