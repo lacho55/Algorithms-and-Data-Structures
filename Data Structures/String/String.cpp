@@ -1,10 +1,10 @@
-
 #include "String.h"
 
 /* ------ Constructors --------*/
 
 String::String() {
 	reserve(INITIAL_CAPACITY);
+	_data[0] = '\0';
 }
 
 
@@ -38,7 +38,7 @@ String& String::operator=(const String& other) {
 
 
 String& String::operator=(const char* str) {
-	assign(str,strlen(str));
+	assign(str, strlen(str));
 	return *this;
 }
 
@@ -54,7 +54,7 @@ String& String::operator=(String&& other) noexcept {
 
 /* ------- Accessors --------- */
 
-const char* String::c_str() const {
+char* String::c_str() const {
 	return _data;
 }
 
@@ -88,6 +88,13 @@ void String::clear() {
 }
 
 
+void String::erase() {
+	delete[] _data;
+	reserve(INITIAL_CAPACITY);
+	_length = 0;
+}
+
+
 size_t String::length() const {
 	return _length;
 }
@@ -108,7 +115,7 @@ void String::reserve(size_t n) {
 		}
 		delete[] _data;
 	}
-
+	temp[_length] = '\0';
 	_data = temp;
 	_capacity = n;
 }
@@ -131,7 +138,7 @@ void String::assign(const char* str, const size_t n) {
 	_length = n;
 	reserve(n + INITIAL_CAPACITY);
 	strcpy_s(_data, _length + 1, str);
-	_data[_length + 1] = '\0';
+	_data[_length] = '\0';
 }
 
 
@@ -159,7 +166,7 @@ void String::concat(const char* str, size_t n) {
 		_data[_length + i] = str[i];
 	}
 	_length += n;
-	_data[_length + 1] = '\0';
+	_data[_length] = '\0';
 }
 
 
@@ -175,16 +182,17 @@ void String::push_back(const char& val) {
 		reserve(INITIAL_CAPACITY);
 	}
 	else if (_length == _capacity) {
-		reserve(2*_capacity);
+		reserve(2 * _capacity);
 	}
 
-	
+
 	_data[_length++] = val;
+	_data[_length] = '\0';
 }
 
 
 char String::pop_back() {
-	if (_length == 0) 
+	if (_length == 0)
 		return '\0';
 
 	char c = _data[_length - 1];
@@ -204,6 +212,18 @@ String& String::operator+=(const char* str) {
 String& String::operator+=(const String& other) {
 	concat(other.c_str(), other.length());
 	return *this;
+}
+
+
+String String::operator+(char s)
+{
+	String result;
+	result._data = new char[this->length() + 2];
+	strcpy_s(result._data, this->length() + 1, this->_data);
+	result._data[this->length()] = s;
+	result._data[this->length() + 1] = '\0';
+
+	return result;
 }
 
 
@@ -227,6 +247,7 @@ String operator+(const String& object, const char* str) {
 	return temp;
 }
 
+
 String operator+(const char* str, const String& object) {
 	String temp;
 	temp += str;
@@ -234,13 +255,46 @@ String operator+(const char* str, const String& object) {
 	return temp;
 }
 
+
+bool String::operator==(const String& other){
+	if (strcmp(this->_data, other._data) == 0) return true;
+	return false;
+}
+
+
+bool String::operator==(const char* other) {
+	if (strcmp(this->_data, other) == 0) return true;
+	return false;
+}
+
+
+bool String::operator==(char* other) {
+	if (strcmp(this->_data, other) == 0) return true;
+	return false;
+}
+
+
+bool String::operator!=(const String& other) {
+	if (*this == other) return false;
+	return true;
+}
+
+
+bool String::operator!=(const char* other) {
+	if (strcmp(this->_data, other) == 0) return false;
+	return true;
+}
+
+
 std::ostream& operator<<(std::ostream& out, const String& str) {
 	out << str.c_str();
+
 	return out;
 }
 
 std::istream& operator>>(std::istream& in, String& str) {
 	str.clear();
+
 	char c;
 	do {
 		c = in.get();
@@ -248,6 +302,22 @@ std::istream& operator>>(std::istream& in, String& str) {
 			break;
 		str.push_back(c);
 	} while (true);
+	str.push_back('\0');
+	return in;
+}
+
+
+std::ifstream& operator>>(std::ifstream& in, String& str) {
+	str.clear();
+	char c;
+	while (in.get(c)) {
+		if (c == '\n')
+			break;
+		str.push_back(c);
+	}
+
+	str.push_back('\0');
 
 	return in;
 }
+

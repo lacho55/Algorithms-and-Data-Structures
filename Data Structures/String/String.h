@@ -1,10 +1,10 @@
-
 #pragma once
+#include<fstream>
 #include <iostream>
 #include <cstring>
 #include <cassert>
 
-#define INITIAL_CAPACITY 16
+#define INITIAL_CAPACITY 256
 
 class String {
 private:
@@ -18,7 +18,7 @@ private:
 	void move(String&);
 	void swap(String&);
 	void concat(const char*, size_t);
-	int compare(const char*);
+	int  compare(const char*);
 
 
 public:
@@ -38,7 +38,7 @@ public:
 
 	/*-------- Accessors ---------*/
 
-	const char* c_str() const;
+	char* c_str() const;
 	const char& operator[](size_t) const;
 	const char& front() const;
 	const char& back() const;
@@ -47,6 +47,7 @@ public:
 
 	bool empty() const;
 	void clear();
+	void erase();
 	size_t capacity() const;
 	size_t length() const;
 	void reserve(size_t);
@@ -59,6 +60,7 @@ public:
 	char pop_back();
 	String& operator+=(const String&);
 	String& operator+=(const char*);
+	String operator+(char s);
 
 
 	/*---------- Non-member function overloads -------------*/
@@ -67,8 +69,13 @@ public:
 	friend String operator+(const  String&, const String&);
 	friend String operator+(const String&, const char*);
 	friend String operator+(const char*, const String&);
+	bool operator==(const String& other);
+	bool operator==(const char* other);
+	bool operator==(char* other);
+	bool operator !=(const String& other);
+	bool operator !=(const char* other);
 	friend std::ostream& operator<<(std::ostream&, const String&);
 	friend std::istream& operator>>(std::istream&, String&);
-
+	friend std::ifstream& operator>>(std::ifstream&, String&);
+	
 };
-
