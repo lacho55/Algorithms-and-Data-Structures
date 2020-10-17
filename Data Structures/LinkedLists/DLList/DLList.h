@@ -23,4 +23,14 @@ class DLList{
         DLList(const DLList<T>&);
         DLList<T>& operator=(const DLList<T>&);
         ~DLList();
+        void push_back(const T& data);
+        void push_front(const T& data);
+        void pop_back();
+        void pop_front();
+        T front() const;
+        T back() const;
+        bool empty() const;
+        size_t size() const;
+        void print() const;
+        void reverse();
 };
